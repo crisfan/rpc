@@ -10,10 +10,6 @@
 
     <artifactId>rpc-server</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
-
-    <name>Spring Boot Blank Project (from https://github.com/making/spring-boot-blank)</name>
-
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -21,6 +21,20 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+
+
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.reflections</groupId>
+        <artifactId>reflections</artifactId>
+        <version>0.9.10</version>
+      </dependency>
+    </dependencies>
+
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
