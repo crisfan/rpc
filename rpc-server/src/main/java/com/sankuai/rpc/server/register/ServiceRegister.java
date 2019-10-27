@@ -38,7 +38,7 @@ public class ServiceRegister {
         if(!start.get()){
             ZkClient client = connectServer();
             if (client != null) {
-                AddRootNode(client);
+                addRootNode(client);
                 createNode(client, data);
             }
             start.compareAndSet(false, true);
@@ -51,7 +51,7 @@ public class ServiceRegister {
         return client;
     }
 
-    private void AddRootNode(ZkClient client) {
+    private void addRootNode(ZkClient client) {
         boolean exists = client.exists(ZK_REGISTRY_PATH);
         if (!exists) {
             client.createPersistent(ZK_REGISTRY_PATH);

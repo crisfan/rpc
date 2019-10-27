@@ -5,6 +5,7 @@
 
 package com.sankuai.rpc.client.init;
 
+import com.sankuai.rpc.client.discovery.ServerDiscovery;
 import com.sankuai.rpc.client.proxy.ProxyHandler;
 
 /**
@@ -22,8 +23,12 @@ public class LaunchBootStrap {
 
         ProxyHandler.INSTANCE.init(packageName);
 
+        ServerDiscovery.INSTANCE.init();
 
-
-
+        try {
+            Thread.sleep(10000000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
