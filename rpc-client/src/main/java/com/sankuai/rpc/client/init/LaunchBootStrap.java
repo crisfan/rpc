@@ -6,6 +6,7 @@
 package com.sankuai.rpc.client.init;
 
 import com.sankuai.rpc.client.discovery.ServerDiscovery;
+import com.sankuai.rpc.client.netty.CustomNettyClient;
 import com.sankuai.rpc.client.proxy.ProxyHandler;
 
 /**
@@ -21,8 +22,13 @@ public class LaunchBootStrap {
 
     public static void main(String[] args) {
 
+        // 代理将要访问的服务
         ProxyHandler.INSTANCE.init(packageName);
 
+        // 初始化客户端
+        CustomNettyClient.INSTANCE.init();
+
+        // 监听server端
         ServerDiscovery.INSTANCE.init();
 
         try {
