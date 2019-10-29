@@ -6,24 +6,22 @@
 package com.sankuai.rpc.client.netty;
 
 import com.google.common.collect.Lists;
+import com.sankuai.rpc.client.common.utils.JacksonUtils;
 import com.sankuai.rpc.client.netty.hanler.NettyClientHandler;
-import com.sun.tools.javac.util.StringUtils;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -110,10 +108,21 @@ public class CustomNettyClient {
         try {
             ChannelFuture channelFuture = bootstrap.connect(socketAddress);
             channel = channelFuture.sync().channel();
-        } catch (InterruptedException e) {
-            log.error("channel 中断", e);
+        } catch (Exception e) {
+            log.error("连接远程服务器失败，socketAddress:{}", JacksonUtils.toJsonString(socketAddress), e);
         }
         return channel;
+    }
+
+    public List<Channel> getChannels(){
+        List<Channel> channelList = Lists.newArrayList();
+        if(MapUtils.isNotEmpty(channelMap)){
+            Set<Map.Entry<SocketAddress, Channel>> entries = channelMap.entrySet();
+            for (Map.Entry<SocketAddress, Channel> entry: entries){
+                channelList.add(entry.getValue());
+            }
+        }
+        return channelList;
     }
 
     public static void main(String[] args) {

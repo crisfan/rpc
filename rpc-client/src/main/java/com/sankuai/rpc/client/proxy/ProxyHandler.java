@@ -5,7 +5,9 @@
 
 package com.sankuai.rpc.client.proxy;
 
+import com.sankuai.rpc.client.netty.hanler.NettyClientHandler;
 import com.sankuai.rpc.server.annotation.RemoteService;
+import com.sankuai.rpc.server.entity.Request;
 import org.reflections.Reflections;
 
 import java.lang.reflect.InvocationHandler;
@@ -55,11 +57,19 @@ public class ProxyHandler {
 
     private InvocationHandler getHandler(){
         return (proxy, method, args) -> {
-            System.out.println("doubi");
+            Request request = getRequest(proxy, method, args);
+            NettyClientHandler.INSTANCE.sendRequest(request);
             return null;
         };
     }
 
+    private Request getRequest(Object proxy, Method method, Object[] args) {
+        Request request = new Request();
+        request.setClassName(proxy.getClass().getSimpleName());
+        request.setMethodName(method.getName());
+        request.setParameters(args);
+        return request;
+    }
 
     public <T> T getProxyInstance(Class<T> clazz){
         Object proxy = proxyMap.get(clazz.getName());
