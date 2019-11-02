@@ -74,6 +74,7 @@ public class CustomNettyClient {
     public synchronized void updateConn(List<String> serverAddressList){
 
         if(CollectionUtils.isEmpty(serverAddressList)){
+            log.info("没有连接，清空缓存的channel");
             channelMap.clear();
         }
 
@@ -88,8 +89,10 @@ public class CustomNettyClient {
             SocketAddress socketAddress = new InetSocketAddress(ipAndPort[0], Integer.parseInt(ipAndPort[1]));
             Channel channel = channelMap.get(socketAddress);
             if(Objects.isNull(channel) || !channel.isOpen()){
+                log.info("新增channel:{}", serverAddress);
                 channelMap.put(socketAddress, createChannel(socketAddress));
             }
+
             newSocketAddressList.add(socketAddress);
         }
 
@@ -99,7 +102,10 @@ public class CustomNettyClient {
             Map.Entry<SocketAddress, Channel> next = it.next();
             SocketAddress oldSocketAddress = next.getKey();
             if(!newSocketAddressList.contains(oldSocketAddress)){
-               it.remove();
+               log.info("移除channel:{}", oldSocketAddress);
+                Channel channel = next.getValue();
+                channel.close();
+                it.remove();
             }
         }
     }

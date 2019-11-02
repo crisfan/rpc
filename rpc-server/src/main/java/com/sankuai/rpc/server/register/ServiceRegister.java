@@ -32,11 +32,14 @@ public class ServiceRegister {
     @Getter
     private final String ZK_REGISTRY_PATH = "/rpc";
 
+    @Getter
+    private ZkClient client;
+
     private ServiceRegister(){}
 
     public void register(String data) {
         if(!start.get()){
-            ZkClient client = connectServer();
+            client = connectServer();
             if (client != null) {
                 addRootNode(client);
                 createNode(client, data);
@@ -61,6 +64,16 @@ public class ServiceRegister {
 
     private void createNode(ZkClient client, String data) {
         String path = client.create(ZK_REGISTRY_PATH + "/provider", data, CreateMode.EPHEMERAL_SEQUENTIAL);
-        log.info("创建zookeeper数据节点 ({} => {})", path, data);
+        log.info("创建zookeeper数据节点 => path:{},data:{})", path, data);
+    }
+
+    public static void main(String[] args) {
+        ServiceRegister.INSTANCE.register("127.0.0.1:9000");
+
+        try {
+            Thread.sleep(1000000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

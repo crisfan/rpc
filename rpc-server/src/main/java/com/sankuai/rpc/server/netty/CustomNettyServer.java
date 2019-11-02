@@ -5,11 +5,10 @@
 
 package com.sankuai.rpc.server.netty;
 
-import com.fasterxml.jackson.core.JsonEncoding;
 import com.sankuai.common.protocol.JSONDecoder;
 import com.sankuai.common.protocol.JSONEncoder;
-import com.sankuai.rpc.server.register.ServiceRegister;
 import com.sankuai.rpc.server.netty.handler.NettyServerHandler;
+import com.sankuai.rpc.server.register.ServiceRegister;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -37,7 +36,7 @@ public class CustomNettyServer {
 
     private final AtomicBoolean started = new AtomicBoolean(false);
 
-    private final int port = 9000;
+    private final int port = 9001;
 
     private final String host = "127.0.0.1";
 
@@ -82,5 +81,10 @@ public class CustomNettyServer {
 
     public String getServerAddress(){
         return host + ":" + port;
+    }
+
+
+    public static void main(String[] args) {
+        CustomNettyServer.INSTANCE.launch();
     }
 }

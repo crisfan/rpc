@@ -31,7 +31,7 @@ public class LaunchBootStrap {
         CustomNettyClient.INSTANCE.init();
 
         // 监听server端
-        ServerDiscovery.INSTANCE.init();
+        ServerDiscovery.INSTANCE.init(CustomNettyClient.INSTANCE);
 
         try {
             Thread.sleep(10000);
