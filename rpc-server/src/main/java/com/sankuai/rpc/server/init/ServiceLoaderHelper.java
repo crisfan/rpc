@@ -5,7 +5,10 @@
 
 package com.sankuai.rpc.server.init;
 
+import com.sankuai.common.utils.JacksonUtils;
 import com.sankuai.rpc.server.annotation.RemoteService;
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.collections4.CollectionUtils;
 import org.reflections.Reflections;
 
 import java.util.Map;
@@ -20,9 +23,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author fanyuhao
  * @version $Id:ServiceLoaderHelper.java v1.0 2019/10/17 下午11:31 fanyuhao Exp $
  */
+@Log4j2
 public class ServiceLoaderHelper {
     public static final ServiceLoaderHelper INSTANCE = new ServiceLoaderHelper();
 
+    /**
+     * key: interfaceName value: instance
+     */
     private ConcurrentHashMap<String, Object> serviceMap = new ConcurrentHashMap<>();
 
     /**
@@ -42,11 +49,20 @@ public class ServiceLoaderHelper {
                     continue;
                 }
                 Object obj = clazz.newInstance();
-                serviceMap.put(clazz.getName(), obj);
+                serviceMap.put(getInterfaceName(clazz), obj);
             }
         }catch (Throwable t){
             throw new RuntimeException("实例化错误");
         }
+    }
+
+    private String getInterfaceName(Class clazz) {
+        Class[] interfaces = clazz.getInterfaces();
+        if(Objects.isNull(interfaces) || Objects.equals(interfaces.length, 0 )){
+            log.info("类clazz:{}没有实现接口", JacksonUtils.toJsonString(clazz));
+            throw new RuntimeException("未实现接口");
+        }
+        return interfaces[0].getName();
     }
 
     public Map getServiceMap() {

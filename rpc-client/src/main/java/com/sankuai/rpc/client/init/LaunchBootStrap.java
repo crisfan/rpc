@@ -8,6 +8,8 @@ package com.sankuai.rpc.client.init;
 import com.sankuai.rpc.client.discovery.ServerDiscovery;
 import com.sankuai.rpc.client.netty.CustomNettyClient;
 import com.sankuai.rpc.client.proxy.ProxyHandler;
+import com.sankuai.rpc.server.result.UserInfoDTO;
+import com.sankuai.rpc.server.service.UserService;
 
 /**
  * <p>
@@ -30,6 +32,17 @@ public class LaunchBootStrap {
 
         // 监听server端
         ServerDiscovery.INSTANCE.init();
+
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        UserService userService = ProxyHandler.INSTANCE.getProxyInstance(UserService.class);
+        UserInfoDTO user = userService.getUserInfoById(1L);
+        System.out.println(user);
 
         try {
             Thread.sleep(10000000);

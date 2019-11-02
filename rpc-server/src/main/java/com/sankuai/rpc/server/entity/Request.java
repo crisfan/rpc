@@ -21,7 +21,7 @@ public class Request {
     /**
      * 类名
      */
-    private String className;
+    private String interfaceName;
 
     /**
      * 函数名称

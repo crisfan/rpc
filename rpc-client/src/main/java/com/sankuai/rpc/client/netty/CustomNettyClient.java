@@ -6,6 +6,7 @@
 package com.sankuai.rpc.client.netty;
 
 import com.google.common.collect.Lists;
+import com.sankuai.common.protocol.JSONEncoder;
 import com.sankuai.rpc.client.common.utils.JacksonUtils;
 import com.sankuai.rpc.client.netty.hanler.NettyClientHandler;
 import io.netty.bootstrap.Bootstrap;
@@ -14,7 +15,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -55,6 +55,7 @@ public class CustomNettyClient {
                                 @Override
                                 protected void initChannel(SocketChannel channel) throws Exception {
                                     ChannelPipeline pipeline = channel.pipeline();
+                                    pipeline.addLast(new JSONEncoder());
                                     pipeline.addLast(new IdleStateHandler(0, 0, 30));
                                     pipeline.addLast("handler", NettyClientHandler.INSTANCE);
                                 }

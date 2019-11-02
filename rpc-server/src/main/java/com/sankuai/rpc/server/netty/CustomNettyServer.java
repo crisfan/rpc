@@ -5,6 +5,9 @@
 
 package com.sankuai.rpc.server.netty;
 
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.sankuai.common.protocol.JSONDecoder;
+import com.sankuai.common.protocol.JSONEncoder;
 import com.sankuai.rpc.server.register.ServiceRegister;
 import com.sankuai.rpc.server.netty.handler.NettyServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -57,6 +60,8 @@ public class CustomNettyServer {
                             @Override
                             protected void initChannel(SocketChannel channel) throws Exception {
                                 ChannelPipeline pipeline = channel.pipeline();
+                                pipeline.addLast(new JSONDecoder());
+                                pipeline.addLast(new JSONEncoder());
                                 pipeline.addLast(new IdleStateHandler(0, 0, 60));
                                 pipeline.addLast(new NettyServerHandler());
                             }

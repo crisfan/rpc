@@ -29,7 +29,7 @@ public class Response {
     /**
      * 错误描述
      */
-    private String error_msg;
+    private String msg;
 
     /**
      * 数据

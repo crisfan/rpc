@@ -8,6 +8,7 @@ package com.sankuai.rpc.client.proxy;
 import com.sankuai.rpc.client.netty.hanler.NettyClientHandler;
 import com.sankuai.rpc.server.annotation.RemoteService;
 import com.sankuai.rpc.server.entity.Request;
+import com.sankuai.rpc.server.entity.Response;
 import org.reflections.Reflections;
 
 import java.lang.reflect.InvocationHandler;
@@ -16,7 +17,9 @@ import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.SynchronousQueue;
 
 /**
  * <p>
@@ -49,23 +52,24 @@ public class ProxyHandler {
                 continue;
             }
 
-            InvocationHandler handler = getHandler();
+            InvocationHandler handler = getHandler(clazz.getName());
             Object proxyInstance = Proxy.newProxyInstance(clazz.getClassLoader(), new Class[] { clazz }, handler);
             proxyMap.put(clazz.getName(), proxyInstance);
         }
     }
 
-    private InvocationHandler getHandler(){
+    private InvocationHandler getHandler(String interfaceName){
         return (proxy, method, args) -> {
-            Request request = getRequest(proxy, method, args);
-            NettyClientHandler.INSTANCE.sendRequest(request);
-            return null;
+            Request request = getRequest(interfaceName, method, args);
+            SynchronousQueue<Response> queue = NettyClientHandler.INSTANCE.sendRequest(request);
+            return queue.take();
         };
     }
 
-    private Request getRequest(Object proxy, Method method, Object[] args) {
+    private Request getRequest(String interfaceName, Method method, Object[] args) {
         Request request = new Request();
-        request.setClassName(proxy.getClass().getSimpleName());
+        request.setId(UUID.randomUUID().toString());
+        request.setInterfaceName(interfaceName);
         request.setMethodName(method.getName());
         request.setParameters(args);
         return request;
@@ -73,7 +77,6 @@ public class ProxyHandler {
 
     public <T> T getProxyInstance(Class<T> clazz){
         Object proxy = proxyMap.get(clazz.getName());
-
         if(Objects.nonNull(proxy) && clazz.isInstance(proxy)){
             return (T) proxy;
         }

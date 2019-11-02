@@ -41,7 +41,7 @@ public class ServerDiscovery {
             synchronized (this) {
                 if (!isInitialized) {
                     zkClient = connectServer();
-                    watch();
+                    watchServer();
                     isInitialized = true;
                 }
             }
@@ -51,8 +51,9 @@ public class ServerDiscovery {
     /**
      * 监听节点变化
      */
-    private void watch() {
+    private void watchServer() {
         zkClient.subscribeChildChanges(ZK_REGISTRY_PATH, (parentPath, children) -> {
+            System.out.println("有新的链接");
             if (children == null) {
                 log.info("<" + parentPath + "> is deleted");
                 return;

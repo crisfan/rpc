@@ -68,6 +68,11 @@
             <artifactId>jackson-annotations</artifactId>
         </dependency>
 
+        <dependency>
+            <artifactId>common</artifactId>
+            <groupId>com.sankuai.rpc</groupId>
+        </dependency>
+
     </dependencies>
 
 </project>
