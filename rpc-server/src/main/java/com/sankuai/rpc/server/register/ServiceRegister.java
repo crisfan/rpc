@@ -5,6 +5,7 @@
 
 package com.sankuai.rpc.server.register;
 
+import com.sankuai.common.protocol.CustomZkSerializer;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.I0Itec.zkclient.ZkClient;
@@ -49,7 +50,7 @@ public class ServiceRegister {
     }
 
     private ZkClient connectServer() {
-        ZkClient client = new ZkClient(registryAddress,20000,20000);
+        ZkClient client = new ZkClient(registryAddress, 20000, 20000, CustomZkSerializer.INSTANCE);
         log.info("连接zookeeper.....，address:{}", registryAddress);
         return client;
     }

@@ -5,9 +5,9 @@
 
 package com.sankuai.rpc.client.netty.hanler;
 
+import com.sankuai.common.utils.JacksonUtils;
 import com.sankuai.rpc.client.Exception.NotUsedConnException;
 import com.sankuai.rpc.client.netty.CustomNettyClient;
-import com.sankuai.rpc.server.common.utils.JacksonUtils;
 import com.sankuai.rpc.server.entity.Request;
 import com.sankuai.rpc.server.entity.Response;
 import io.netty.channel.Channel;
@@ -16,6 +16,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -49,6 +50,19 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx)   {
+        InetSocketAddress address =(InetSocketAddress) ctx.channel().remoteAddress();
+        log.info("与RPC服务器断开连接，address:{}", address);
+        ctx.channel().close();
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause){
+        log.info("RPC通信服务器发生异常，cause:{}", cause);
+        ctx.channel().close();
+    }
+
     /**
      * 发送请求
      * @param request
@@ -67,9 +81,9 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
         int next = random.nextInt(channelList.size());
 
         Channel channel = channelList.get(next);
-        log.info("channel", com.sankuai.rpc.client.common.utils.JacksonUtils.toJsonString(channel));
+        log.info("channel", JacksonUtils.toJsonString(channel));
         if(Objects.nonNull(channel) && channel.isActive()){
-            log.info("request:{}", com.sankuai.rpc.client.common.utils.JacksonUtils.toJsonString(request));
+            log.info("request:{}", JacksonUtils.toJsonString(request));
             channel.writeAndFlush(request);
         }
 

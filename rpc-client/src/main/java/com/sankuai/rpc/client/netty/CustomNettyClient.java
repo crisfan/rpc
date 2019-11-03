@@ -7,7 +7,7 @@ package com.sankuai.rpc.client.netty;
 
 import com.google.common.collect.Lists;
 import com.sankuai.common.protocol.JSONEncoder;
-import com.sankuai.rpc.client.common.utils.JacksonUtils;
+import com.sankuai.common.utils.JacksonUtils;
 import com.sankuai.rpc.client.netty.hanler.NettyClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -102,9 +102,9 @@ public class CustomNettyClient {
             Map.Entry<SocketAddress, Channel> next = it.next();
             SocketAddress oldSocketAddress = next.getKey();
             if(!newSocketAddressList.contains(oldSocketAddress)){
-               log.info("移除channel:{}", oldSocketAddress);
-                Channel channel = next.getValue();
-                channel.close();
+//               log.info("移除channel:{}", oldSocketAddress);
+//                Channel channel = next.getValue();
+//                channel.close();
                 it.remove();
             }
         }
