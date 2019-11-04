@@ -68,4 +68,10 @@ public class ServiceLoaderHelper {
     public Map getServiceMap() {
         return this.serviceMap;
     }
+
+    public static void main(String[] args) {
+        ServiceLoaderHelper.INSTANCE.loadService("com.sankuai.rpc.server.service");
+
+        System.out.println(ServiceLoaderHelper.INSTANCE.serviceMap);
+    }
 }

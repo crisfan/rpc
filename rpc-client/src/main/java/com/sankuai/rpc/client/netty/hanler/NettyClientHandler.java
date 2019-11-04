@@ -81,7 +81,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
         int next = random.nextInt(channelList.size());
 
         Channel channel = channelList.get(next);
-        log.info("channel", JacksonUtils.toJsonString(channel));
+        log.info("选取的channel:{}", JacksonUtils.toJsonString(channel));
         if(Objects.nonNull(channel) && channel.isActive()){
             log.info("request:{}", JacksonUtils.toJsonString(request));
             channel.writeAndFlush(request);

@@ -6,6 +6,7 @@
 package com.sankuai.rpc.client.discovery;
 
 import com.google.common.collect.Lists;
+import com.sankuai.common.protocol.CustomZkSerializer;
 import com.sankuai.common.utils.JacksonUtils;
 import com.sankuai.rpc.client.netty.CustomNettyClient;
 import io.netty.channel.Channel;
@@ -81,7 +82,7 @@ public class ServerDiscovery {
             log.info("监听到变化，parentPath:{}, childrenNodes:{}", parentPath, JacksonUtils.toJsonString(childrenNodes));
             List<String> serverAddressList = Lists.newArrayList();
             if (CollectionUtils.isNotEmpty(childrenNodes)) {
-                log.info("children:{}", JacksonUtils.toJsonString(childrenNodes));
+                log.info("children:{}", childrenNodes);
                 serverAddressList = readData(childrenNodes);
             }
             nettyClient.updateConn(serverAddressList);
@@ -105,7 +106,7 @@ public class ServerDiscovery {
      * 连接zk服务器
      */
     private ZkClient connectServer() {
-        ZkClient client = new ZkClient(registryAddress,20000,20000);
+        ZkClient client = new ZkClient(registryAddress,20000,20000, CustomZkSerializer.INSTANCE);
         log.info("连接zookeeper.....，address:{}", registryAddress);
         return client;
     }

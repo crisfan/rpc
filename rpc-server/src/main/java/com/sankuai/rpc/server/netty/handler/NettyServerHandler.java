@@ -41,15 +41,15 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 
         log.info("收到消息:{}", JacksonUtils.toJsonString(msg));
         Object result = null;
-        Request request = JacksonUtils.jsonToObject(msg.toString(), Request.class);
-        log.info("result:{}", JacksonUtils.toJsonString(result));
+        Request request = JacksonUtils.jsonToObject(JacksonUtils.toJsonString(msg), Request.class);
+        log.info("request:{}", JacksonUtils.toJsonString(request));
         try {
             Map serviceMap = ServiceLoaderHelper.INSTANCE.getServiceMap();
             log.info("serviceMap:{}", JacksonUtils.toJsonString(serviceMap));
             Object serviceBean = serviceMap.get(request.getInterfaceName());
             if(Objects.nonNull(serviceBean)){
                 Method method = getMethod(request, serviceBean);
-                result = method.invoke(serviceBean, getParameters(request.getParameterTypes(), request.getParameters()));
+                result = method.invoke(serviceBean, request.getParameters());
             }
             log.info("result:{}", JacksonUtils.toJsonString(request));
             Response response = setResponse(request.getId(), result, true);
@@ -90,15 +90,31 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
         return serviceBean.getClass().getMethod(request.getMethodName(), request.getParameterTypes());
     }
 
-    private Object getParameters(Class<?>[] parameterTypes, Object[] parameters){
+    private Object[] getParameters(Class<?>[] parameterTypes, Object[] parameters){
         if(Objects.isNull(parameters) || parameters.length == 0){
             return parameters;
         }
 
         Object[] objects = new Object[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
-            objects[i] = JacksonUtils.jsonToObject(parameters[i].toString(), parameterTypes[i]);
+            objects[i] = parameters[i];
         }
         return objects;
+    }
+
+    public static void main(String[] args) {
+        Class<?>[] clazz = new Class[1];
+        clazz[0] = Long.class;
+
+        Request request = new Request();
+        request.setParameterTypes(clazz);
+
+        String a = JacksonUtils.toJsonString(request);
+        System.out.println();
+
+
+        String obj = JacksonUtils.toJsonString(clazz);
+        System.out.println(obj);
+        System.out.println(JacksonUtils.jsonToObject(obj, Object.class));
     }
 }

@@ -9,6 +9,7 @@ import com.sankuai.common.utils.JacksonUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * <p>
@@ -17,6 +18,7 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
  * @author fanyuhao
  * @version $Id:JSONDecoder.java v1.0 2019/11/1 下午12:58 fanyuhao Exp $
  */
+@Log4j2
 public class JSONDecoder extends LengthFieldBasedFrameDecoder {
 
     public JSONDecoder(){
@@ -25,6 +27,7 @@ public class JSONDecoder extends LengthFieldBasedFrameDecoder {
 
     @Override
     protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
+        log.info("decode...");
         ByteBuf decode = (ByteBuf) super.decode(ctx, in);
         if (decode==null){
             return null;

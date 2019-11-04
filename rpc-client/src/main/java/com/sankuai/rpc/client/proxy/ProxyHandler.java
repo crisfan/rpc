@@ -11,13 +11,11 @@ import com.sankuai.rpc.server.entity.Request;
 import com.sankuai.rpc.server.entity.Response;
 import org.reflections.Reflections;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.SynchronousQueue;
 
@@ -72,6 +70,14 @@ public class ProxyHandler {
         request.setInterfaceName(interfaceName);
         request.setMethodName(method.getName());
         request.setParameters(args);
+
+        if(args.length != 0){
+            Class[] clazz = new Class[args.length];
+            for (int i=0; i < args.length; i++){
+                clazz[i] = args[i].getClass();
+            }
+            request.setParameterTypes(clazz);
+        }
         return request;
     }
 
