@@ -33,7 +33,6 @@ public class UserServiceImpl implements UserService {
     }
 
     public static void main(String[] args) {
-
         Request request = new Request();
         request.setId("1");
         request.setInterfaceName("UserService");
@@ -44,7 +43,6 @@ public class UserServiceImpl implements UserService {
 
         Request object = JacksonUtils.jsonToObject(json.toString(), Request.class);
         System.out.println(object);
-
     }
 
 }

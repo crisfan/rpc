@@ -6,7 +6,7 @@
 package com.sankuai.rpc.server.result;
 
 import lombok.Getter;
-import lombok.experimental.Builder;
+import lombok.Builder;
 
 /**
  * <p>
