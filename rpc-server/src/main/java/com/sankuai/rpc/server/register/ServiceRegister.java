@@ -41,10 +41,8 @@ public class ServiceRegister {
     public void register(String data) {
         if(!start.get()){
             client = connectServer();
-            if (client != null) {
-                addRootNode(client);
-                createNode(client, data);
-            }
+            addRootNode(client);
+            createNode(client, data);
             start.compareAndSet(false, true);
         }
     }
